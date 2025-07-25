@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ problem.title }} - Python Code Editor</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/material-darker.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container-fluid h-100">
+        <!-- Header -->
+        <nav class="navbar navbar-dark bg-primary">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    {{ problem.title }}
+                </span>
+                <div class="d-flex">
+                    <span class="badge bg-success me-2">{{ problem.difficulty }}</span>
+                    <span class="badge bg-info me-3">{{ problem.marks }}</span>
+                    <button class="btn btn-outline-light btn-sm me-2" id="generateCertificate">
+                        <i class="fas fa-certificate me-1"></i>
+                        Generate Certificate
+                    </button>
+                    <button class="btn btn-light btn-sm" id="nextChallenge">
+                        Next Challenge
+                        <i class="fas fa-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="row h-100 g-0">
+            <!-- Left Panel - Problem Description -->
+            <div class="col-md-5 problem-panel">
+                <div class="p-4">
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs" id="problemTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab">
+                                Description
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="solution-tab" data-bs-toggle="tab" data-bs-target="#solution" type="button" role="tab">
+                                Solution
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content mt-3" id="problemTabContent">
+                        <!-- Description Tab -->
+                        <div class="tab-pane fade show active" id="description" role="tabpanel">
+                            <h4>{{ problem.title }}</h4>
+                            <p class="text-muted">{{ problem.description }}</p>
+                            
+                            <h5 class="mt-4">How It Works</h5>
+                            <ul>
+                                {% for step in problem.how_it_works %}
+                                <li>{{ step }}</li>
+                                {% endfor %}
+                            </ul>
+                            
+                            <h5 class="mt-4">Example Inputs and Outputs</h5>
+                            {% for example in problem.examples %}
+                            <div class="example-box mb-3">
+                                <div class="input-example">
+                                    <strong>Input:</strong> {{ example.input }}
+                                </div>
+                                <div class="output-example">
+                                    <strong>Output:</strong> {{ example.output }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Solution Tab -->
+                        <div class="tab-pane fade" id="solution" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5>Solution for Caesar Cipher - {{ problem.marks }}</h5>
+                                <button class="btn btn-outline-primary btn-sm" id="copyCode">
+                                    <i class="fas fa-copy me-1"></i>
+                                    Copy Code
+                                </button>
+                            </div>
+                            <div class="solution-code">
+                                <pre><code>{{ problem.starter_code }}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Code Editor -->
+            <div class="col-md-7 editor-panel">
+                <div class="editor-header">
+                    <div class="d-flex justify-content-between align-items-center p-3">
+                        <h5 class="mb-0">
+                            <i class="fab fa-python me-2"></i>
+                            Python Editor
+                        </h5>
+                        <div>
+                            <button class="btn btn-success btn-sm me-2" id="runCode">
+                                <i class="fas fa-play me-1"></i>
+                                Run Code
+                            </button>
+                            <button class="btn btn-primary btn-sm" id="executeTestCases">
+                                Execute Test Cases
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Editor -->
+                <div class="code-editor-container">
+                    <textarea id="codeEditor"></textarea>
+                </div>
+
+                <!-- Output Panel -->
+                <div class="output-panel">
+                    <ul class="nav nav-tabs" id="outputTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="output-tab" data-bs-toggle="tab" data-bs-target="#output" type="button" role="tab">
+                                Output
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="errors-tab" data-bs-toggle="tab" data-bs-target="#errors" type="button" role="tab">
+                                Errors
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="outputTabContent">
+                        <!-- Output Tab -->
+                        <div class="tab-pane fade show active" id="output" role="tabpanel">
+                            <div class="output-content p-3">
+                                <div id="executionOutput">
+                                    <div class="text-muted">Run your code to see output here...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Errors Tab -->
+                        <div class="tab-pane fade" id="errors" role="tabpanel">
+                            <div class="output-content p-3">
+                                <div id="errorOutput">
+                                    <div class="text-muted">No errors to display</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Input Modal -->
+    <div class="modal fade" id="testInputModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Test Input</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="testInput" class="form-label">Enter test input (separate multiple inputs with new lines):</label>
+                    <textarea class="form-control" id="testInput" rows="5" placeholder="Enter the text: Hello World&#10;Enter the shift value: 3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="executeWithInput">Execute</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+</body>
+</html>
