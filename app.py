@@ -89,11 +89,15 @@ def execute_code():
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True,
-                timeout=10  # 10 second timeout
+                text=True
             )
             
-            stdout, stderr = process.communicate(input=test_input)
+            try:
+                stdout, stderr = process.communicate(input=test_input, timeout=10)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                stdout, stderr = process.communicate()
+                raise subprocess.TimeoutExpired([sys.executable, temp_file_path], 10)
             
             if process.returncode == 0:
                 # Successful execution
