@@ -21,22 +21,23 @@
 <body>
     <div class="container-fluid h-100">
         <!-- Header -->
-        <nav class="navbar navbar-dark bg-primary">
-            <div class="container-fluid">
-                <span class="navbar-brand mb-0 h1">
-                    <i class="fas fa-arrow-left me-2"></i>
-                    {{ problem.title }}
-                </span>
+        <nav class="navbar navbar-dark bg-gradient-primary">
+            <div class="container-fluid py-3">
+                <div class="d-flex align-items-center">
+                    <div class="challenge-info">
+                        <h1 class="navbar-brand mb-0 h2 fw-bold" id="challengeTitle">
+                            {{ problem.title }}
+                        </h1>
+                        <div class="challenge-meta mt-1">
+                            <span class="badge bg-success me-2 fs-6" id="challengeDifficulty">{{ problem.difficulty }}</span>
+                            <span class="badge bg-info fs-6" id="challengeMarks">{{ problem.marks }}</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="d-flex">
-                    <span class="badge bg-success me-2">{{ problem.difficulty }}</span>
-                    <span class="badge bg-info me-3">{{ problem.marks }}</span>
-                    <button class="btn btn-outline-light btn-sm me-2" id="generateCertificate">
-                        <i class="fas fa-certificate me-1"></i>
-                        Generate Certificate
-                    </button>
-                    <button class="btn btn-light btn-sm" id="nextChallenge">
+                    <button class="btn btn-light btn-lg px-4" id="nextChallenge">
                         Next Challenge
-                        <i class="fas fa-arrow-right ms-1"></i>
+                        <i class="fas fa-arrow-right ms-2"></i>
                     </button>
                 </div>
             </div>
@@ -45,60 +46,77 @@
         <!-- Main Content -->
         <div class="row h-100 g-0">
             <!-- Left Panel - Problem Description -->
-            <div class="col-md-5 problem-panel">
-                <div class="p-4">
+            <div class="col-md-6 problem-panel">
+                <div class="p-5">
                     <!-- Tabs -->
-                    <ul class="nav nav-tabs" id="problemTabs" role="tablist">
+                    <ul class="nav nav-tabs nav-tabs-custom" id="problemTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab">
+                            <button class="nav-link active px-4 py-3" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab">
+                                <i class="fas fa-book me-2"></i>
                                 Description
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="solution-tab" data-bs-toggle="tab" data-bs-target="#solution" type="button" role="tab">
+                            <button class="nav-link px-4 py-3" id="solution-tab" data-bs-toggle="tab" data-bs-target="#solution" type="button" role="tab">
+                                <i class="fas fa-lightbulb me-2"></i>
                                 Solution
                             </button>
                         </li>
                     </ul>
 
                     <!-- Tab Content -->
-                    <div class="tab-content mt-3" id="problemTabContent">
+                    <div class="tab-content mt-4" id="problemTabContent">
                         <!-- Description Tab -->
                         <div class="tab-pane fade show active" id="description" role="tabpanel">
-                            <h4>{{ problem.title }}</h4>
-                            <p class="text-muted">{{ problem.description }}</p>
-                            
-                            <h5 class="mt-4">How It Works</h5>
-                            <ul>
-                                {% for step in problem.how_it_works %}
-                                <li>{{ step }}</li>
-                                {% endfor %}
-                            </ul>
-                            
-                            <h5 class="mt-4">Example Inputs and Outputs</h5>
-                            {% for example in problem.examples %}
-                            <div class="example-box mb-3">
-                                <div class="input-example">
-                                    <strong>Input:</strong> {{ example.input }}
+                            <div class="problem-content">
+                                <h3 class="fw-bold mb-4" id="problemTitle">{{ problem.title }}</h3>
+                                <div class="problem-description mb-4">
+                                    <p class="lead" id="problemDescription">{{ problem.description }}</p>
                                 </div>
-                                <div class="output-example">
-                                    <strong>Output:</strong> {{ example.output }}
+                                
+                                <div class="how-it-works mb-4">
+                                    <h4 class="fw-semibold mb-3">How It Works</h4>
+                                    <ul class="list-unstyled" id="howItWorksList">
+                                        {% for step in problem.how_it_works %}
+                                        <li class="mb-2">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            {{ step }}
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                
+                                <div class="examples">
+                                    <h4 class="fw-semibold mb-3">Example Inputs and Outputs</h4>
+                                    <div id="examplesList">
+                                        {% for example in problem.examples %}
+                                        <div class="example-card mb-3">
+                                            <div class="input-example">
+                                                <strong class="text-primary">Input:</strong> {{ example.input }}
+                                            </div>
+                                            <div class="output-example">
+                                                <strong class="text-success">Output:</strong> {{ example.output }}
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
-                            {% endfor %}
                         </div>
 
                         <!-- Solution Tab -->
                         <div class="tab-pane fade" id="solution" role="tabpanel">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5>Solution for Caesar Cipher - {{ problem.marks }}</h5>
-                                <button class="btn btn-outline-primary btn-sm" id="copyCode">
-                                    <i class="fas fa-copy me-1"></i>
-                                    Copy Code
-                                </button>
-                            </div>
-                            <div class="solution-code">
-                                <pre><code>{{ problem.starter_code }}</code></pre>
+                            <div class="solution-container">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h4 class="fw-semibold" id="solutionTitle">Solution for {{ problem.title }} - {{ problem.marks }}</h4>
+                                    <button class="btn btn-primary px-4" id="copyCode">
+                                        <i class="fas fa-copy me-2"></i>
+                                        Copy Code
+                                    </button>
+                                </div>
+                                <div class="solution-code-container">
+                                    <pre class="solution-code"><code id="solutionCode">{{ problem.starter_code }}</code></pre>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -106,19 +124,20 @@
             </div>
 
             <!-- Right Panel - Code Editor -->
-            <div class="col-md-7 editor-panel">
+            <div class="col-md-6 editor-panel">
                 <div class="editor-header">
-                    <div class="d-flex justify-content-between align-items-center p-3">
-                        <h5 class="mb-0">
-                            <i class="fab fa-python me-2"></i>
+                    <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                        <h4 class="mb-0 fw-semibold text-white">
+                            <i class="fab fa-python me-3"></i>
                             Python Editor
-                        </h5>
-                        <div>
-                            <button class="btn btn-success btn-sm me-2" id="runCode">
-                                <i class="fas fa-play me-1"></i>
+                        </h4>
+                        <div class="editor-actions">
+                            <button class="btn btn-success btn-lg me-3 px-4" id="runCode">
+                                <i class="fas fa-play me-2"></i>
                                 Run Code
                             </button>
-                            <button class="btn btn-primary btn-sm" id="executeTestCases">
+                            <button class="btn btn-primary btn-lg px-4" id="executeTestCases">
+                                <i class="fas fa-check-double me-2"></i>
                                 Execute Test Cases
                             </button>
                         </div>
@@ -132,34 +151,42 @@
 
                 <!-- Output Panel -->
                 <div class="output-panel">
-                    <ul class="nav nav-tabs" id="outputTabs" role="tablist">
+                    <ul class="nav nav-tabs output-tabs" id="outputTabs" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="output-tab" data-bs-toggle="tab" data-bs-target="#output" type="button" role="tab">
+                            <button class="nav-link active px-4 py-3" id="output-tab" data-bs-toggle="tab" data-bs-target="#output" type="button" role="tab">
+                                <i class="fas fa-terminal me-2"></i>
                                 Output
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="errors-tab" data-bs-toggle="tab" data-bs-target="#errors" type="button" role="tab">
+                            <button class="nav-link px-4 py-3" id="errors-tab" data-bs-toggle="tab" data-bs-target="#errors" type="button" role="tab">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
                                 Errors
                             </button>
                         </li>
                     </ul>
 
-                    <div class="tab-content" id="outputTabContent">
+                    <div class="tab-content h-100" id="outputTabContent">
                         <!-- Output Tab -->
-                        <div class="tab-pane fade show active" id="output" role="tabpanel">
-                            <div class="output-content p-3">
-                                <div id="executionOutput">
-                                    <div class="text-muted">Run your code to see output here...</div>
+                        <div class="tab-pane fade show active h-100" id="output" role="tabpanel">
+                            <div class="output-content p-4 h-100">
+                                <div id="executionOutput" class="output-display">
+                                    <div class="text-muted fs-5">
+                                        <i class="fas fa-play-circle me-2"></i>
+                                        Run your code to see output here...
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Errors Tab -->
-                        <div class="tab-pane fade" id="errors" role="tabpanel">
-                            <div class="output-content p-3">
-                                <div id="errorOutput">
-                                    <div class="text-muted">No errors to display</div>
+                        <div class="tab-pane fade h-100" id="errors" role="tabpanel">
+                            <div class="output-content p-4 h-100">
+                                <div id="errorOutput" class="output-display">
+                                    <div class="text-muted fs-5">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        No errors to display
+                                    </div>
                                 </div>
                             </div>
                         </div>

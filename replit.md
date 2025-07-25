@@ -1,8 +1,8 @@
-# Python Code Editor - Caesar Cipher Challenge
+# Python Code Editor - Multi-Challenge Cryptography Platform
 
 ## Overview
 
-This is a web-based Python coding challenge platform focused on the Caesar Cipher problem. The application provides an interactive coding environment where users can write, test, and validate their Python solutions for cryptographic algorithms. The platform features a split-screen interface with problem descriptions on the left and a code editor on the right.
+This is a web-based Python coding challenge platform featuring multiple cryptography problems. The application provides an interactive coding environment where users can write, test, and validate their Python solutions across different challenges including Caesar Cipher, Basic Monoalphabetic Cipher, and Message Authentication Code (MAC). The platform features a modern split-screen interface with problem descriptions on the left and a professional code editor on the right.
 
 ## User Preferences
 
@@ -35,25 +35,29 @@ Preferred communication style: Simple, everyday language.
 
 ## Key Components
 
-### 1. Problem Management System
-- **Problem Data Structure**: Centralized problem definitions in Python dictionaries
-- **Content Delivery**: Server-side rendering of problem descriptions, examples, and starter code
-- **Extensibility**: Designed to easily add new coding challenges
+### 1. Multi-Challenge System
+- **Challenge Rotation**: Three cryptography challenges with next button functionality
+- **Problem Data Structure**: Centralized problem definitions with individual test cases
+- **Dynamic Content**: Real-time challenge switching without page reload
+- **Challenge Progression**: Caesar Cipher → Monoalphabetic Cipher → MAC → Loop back
 
-### 2. Code Editor Interface
+### 2. Professional Code Editor Interface
+- **Enhanced UI**: Larger, more professional design with gradient backgrounds
 - **Real-time Editing**: CodeMirror integration with Python syntax highlighting
 - **Code Execution**: Frontend JavaScript manages code submission to backend
-- **User Experience**: Features like auto-completion, bracket matching, and fullscreen mode
+- **Advanced Features**: Error line highlighting, fullscreen mode, keyboard shortcuts
 
 ### 3. Code Execution Engine
 - **Security**: Isolated code execution using Python's subprocess module
-- **Validation**: Built-in test case system for automatic solution verification
-- **Error Handling**: Comprehensive error reporting and logging
+- **Enhanced Error Reporting**: Line number detection and visual error highlighting
+- **Multiple Test Cases**: Individual test cases per challenge with detailed results
+- **Timeout Handling**: Proper timeout management for code execution safety
 
-### 4. User Interface Components
-- **Split Panel Layout**: Problem description and code editor in responsive columns
-- **Navigation Bar**: Challenge metadata display with action buttons
-- **Tabbed Interface**: Organized content presentation (problem description, examples, etc.)
+### 4. Modern UI/UX Components
+- **Gradient Design**: Professional gradients and shadows throughout interface
+- **Larger Elements**: Increased button sizes, font sizes, and spacing for better UX
+- **Split Panel Layout**: Enhanced 50/50 problem description and code editor layout
+- **Interactive Elements**: Hover effects, transitions, and visual feedback
 
 ## Data Flow
 

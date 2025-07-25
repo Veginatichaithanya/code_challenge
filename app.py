@@ -14,30 +14,31 @@ logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
 
-# Caesar Cipher problem data
-PROBLEM_DATA = {
-    "title": "Caesar Cipher",
-    "difficulty": "Easy",
-    "marks": "25 Marks",
-    "description": """In cryptography, a Caesar cipher is one of the simplest and most widely known encryption techniques. It is a type of substitution cipher in which each letter in the plaintext is replaced by a letter some fixed number of positions down the alphabet. The method is named after Julius Caesar, who used it in his private correspondence.""",
-    "how_it_works": [
-        "Choose a shift value (key) between 1-25",
-        "For each letter in the plaintext, shift it forward in the alphabet by the key value",
-        "Wrap around to the beginning of the alphabet if necessary",
-        "Leave non-alphabetic characters unchanged",
-        "Return the resulting ciphertext"
-    ],
-    "examples": [
-        {
-            "input": "Plaintext: HELLO, Shift: 3",
-            "output": "Ciphertext: KHOOR"
-        },
-        {
-            "input": "Plaintext: hello world, Shift: 7",
-            "output": "Ciphertext: olssv dvysk"
-        }
-    ],
-    "starter_code": '''def caesar_cipher(text, shift):
+# Problem data for different challenges
+PROBLEMS_DATA = {
+    "caesar_cipher": {
+        "title": "Caesar Cipher",
+        "difficulty": "Easy",
+        "marks": "25 Marks",
+        "description": """In cryptography, a Caesar cipher is one of the simplest and most widely known encryption techniques. It is a type of substitution cipher in which each letter in the plaintext is replaced by a letter some fixed number of positions down the alphabet. The method is named after Julius Caesar, who used it in his private correspondence.""",
+        "how_it_works": [
+            "Choose a shift value (key) between 1-25",
+            "For each letter in the plaintext, shift it forward in the alphabet by the key value",
+            "Wrap around to the beginning of the alphabet if necessary",
+            "Leave non-alphabetic characters unchanged",
+            "Return the resulting ciphertext"
+        ],
+        "examples": [
+            {
+                "input": "Plaintext: HELLO, Shift: 3",
+                "output": "Ciphertext: KHOOR"
+            },
+            {
+                "input": "Plaintext: hello world, Shift: 7",
+                "output": "Ciphertext: olssv dvysk"
+            }
+        ],
+        "starter_code": '''def caesar_cipher(text, shift):
     result = ""
     
     for char in text:
@@ -54,13 +55,180 @@ plain_text = input("Enter the text: ")
 shift_value = int(input("Enter the shift value: "))
 
 cipher_text = caesar_cipher(plain_text, shift_value)
-print("Cipher Text:", cipher_text)'''
+print("Cipher Text:", cipher_text)''',
+        "test_cases": [
+            {
+                'name': 'Basic Test 1',
+                'input': 'HELLO\n3',
+                'expected_output': 'Cipher Text: KHOOR'
+            },
+            {
+                'name': 'Basic Test 2',
+                'input': 'hello world\n7',
+                'expected_output': 'Cipher Text: olssv dvysk'
+            },
+            {
+                'name': 'Mixed Case Test',
+                'input': 'Hello World\n13',
+                'expected_output': 'Cipher Text: Uryyb Jbeyq'
+            },
+            {
+                'name': 'Special Characters Test',
+                'input': 'Hello, World!\n5',
+                'expected_output': 'Cipher Text: Mjqqt, Btwqi!'
+            }
+        ]
+    },
+    "monoalphabetic_cipher": {
+        "title": "Basic Monoalphabetic Cipher",
+        "difficulty": "Easy",
+        "marks": "30 Marks",
+        "description": """A monoalphabetic substitution cipher uses a fixed substitution over the entire message. Each letter of the plaintext is replaced with another letter of the alphabet, so that the letter 'A' always becomes the same letter throughout the whole encryption process.""",
+        "how_it_works": [
+            "Create a substitution key where each letter of the alphabet maps to another unique letter",
+            "For each character in the plaintext, find its corresponding value in the mapping",
+            "Replace the character with its mapped value",
+            "Leave non-alphabetic characters unchanged",
+            "Return the resulting ciphertext"
+        ],
+        "examples": [
+            {
+                "input": "Plaintext: HELLO, Key: {'H':'X', 'E':'Y', 'L':'Z', 'O':'W'}",
+                "output": "Ciphertext: XYZW"
+            }
+        ],
+        "starter_code": '''def monoalphabetic_cipher(plaintext, key_mapping):
+    result = ""
+    
+    for char in plaintext:
+        # Convert to lowercase for consistency
+        char_lower = char.lower()
+        
+        # Apply mapping if character is in the key
+        if char_lower in key_mapping:
+            # Preserve original case
+            if char.isupper():
+                result += key_mapping[char_lower].upper()
+            else:
+                result += key_mapping[char_lower]
+        else:
+            # Keep characters not in the mapping unchanged
+            result += char
+    
+    return result
+
+# Test with a sample mapping
+mapping = {'a': 'q', 'b': 'w', 'c': 'e', 'r': 't', 'd': 'y', 'e': 'u'}
+text = input("Enter text to encrypt: ")
+encrypted = monoalphabetic_cipher(text, mapping)
+print("Encrypted:", encrypted)''',
+        "test_cases": [
+            {
+                'name': 'Basic Mapping Test',
+                'input': 'hello\n',
+                'expected_output': 'Encrypted: huzzy'
+            },
+            {
+                'name': 'Mixed Case Test',
+                'input': 'Hello World\n',
+                'expected_output': 'Encrypted: Huzzy Wytzy'
+            }
+        ]
+    },
+    "mac": {
+        "title": "Message Authentication Code (MAC)",
+        "difficulty": "Medium",
+        "marks": "40 Marks",
+        "description": """A Message Authentication Code (MAC) is a security mechanism used to verify both the integrity and authenticity of a message. It's a small piece of information (tag) that allows the receiver to verify that a message came from the expected sender and hasn't been altered.""",
+        "how_it_works": [
+            "Generate a MAC tag by applying a hash function to a combination of the message and a secret key",
+            "The sender transmits both the message and the MAC tag",
+            "The receiver recalculates the MAC using the same message and key",
+            "If the calculated MAC matches the received MAC, the message is authentic and unaltered"
+        ],
+        "examples": [
+            {
+                "input": "Message: 'Transfer $1000', Key: 'secret'",
+                "output": "MAC: '6dfde3a1b9c7d2f'"
+            }
+        ],
+        "starter_code": '''import hashlib
+import hmac
+import os
+
+def generate_mac(message, key):
+    """Generate a Message Authentication Code (MAC) using HMAC-SHA256"""
+    if isinstance(message, str):
+        message = message.encode('utf-8')
+    if isinstance(key, str):
+        key = key.encode('utf-8')
+    
+    # Create the HMAC
+    mac = hmac.new(key, message, hashlib.sha256)
+    return mac.hexdigest()
+
+def verify_mac(message, key, received_mac):
+    """Verify a received MAC against a newly generated one"""
+    calculated_mac = generate_mac(message, key)
+    # Use a constant-time comparison to prevent timing attacks
+    return hmac.compare_digest(calculated_mac, received_mac)
+
+# Example usage
+secret_key = os.urandom(16)  # Generate a random key
+message = "Transfer $1000 to Account #12345"
+
+# Generate the MAC
+mac = generate_mac(message, secret_key)
+print("Message:", message)
+print("MAC:", mac)
+
+# Verify the MAC (should be True)
+is_valid = verify_mac(message, secret_key, mac)
+print("MAC is valid:", is_valid)
+
+# Try with a tampered message
+tampered_message = "Transfer $9999 to Account #12345"
+is_valid = verify_mac(tampered_message, secret_key, mac)
+print("Tampered message MAC is valid:", is_valid)''',
+        "test_cases": [
+            {
+                'name': 'Basic MAC Generation',
+                'input': 'Test Message\nsecret123\n',
+                'expected_output': 'MAC is valid: True'
+            },
+            {
+                'name': 'MAC Verification',
+                'input': 'Hello World\nmykey\n',
+                'expected_output': 'MAC is valid: True'
+            }
+        ]
+    }
 }
+
+# Current challenge tracker
+current_challenge = "caesar_cipher"
 
 @app.route('/')
 def index():
     """Render the main page with the code editor."""
-    return render_template('index.html', problem=PROBLEM_DATA)
+    global current_challenge
+    return render_template('index.html', problem=PROBLEMS_DATA[current_challenge])
+
+@app.route('/next_challenge')
+def next_challenge():
+    """Switch to the next challenge."""
+    global current_challenge
+    
+    challenge_order = ["caesar_cipher", "monoalphabetic_cipher", "mac"]
+    current_index = challenge_order.index(current_challenge)
+    next_index = (current_index + 1) % len(challenge_order)
+    current_challenge = challenge_order[next_index]
+    
+    return jsonify({
+        'success': True,
+        'challenge': current_challenge,
+        'problem': PROBLEMS_DATA[current_challenge]
+    })
 
 @app.route('/execute', methods=['POST'])
 def execute_code():
@@ -163,30 +331,9 @@ def extract_line_number(error_message):
 
 @app.route('/test_cases')
 def get_test_cases():
-    """Get predefined test cases for Caesar Cipher."""
-    test_cases = [
-        {
-            'name': 'Basic Test 1',
-            'input': 'HELLO\n3',
-            'expected_output': 'Cipher Text: KHOOR'
-        },
-        {
-            'name': 'Basic Test 2',
-            'input': 'hello world\n7',
-            'expected_output': 'Cipher Text: olssv dvysk'
-        },
-        {
-            'name': 'Mixed Case Test',
-            'input': 'Hello World\n13',
-            'expected_output': 'Cipher Text: Uryyb Jbeyq'
-        },
-        {
-            'name': 'Special Characters Test',
-            'input': 'Hello, World!\n5',
-            'expected_output': 'Cipher Text: Mjqqt, Btwqi!'
-        }
-    ]
-    return jsonify(test_cases)
+    """Get predefined test cases for current challenge."""
+    global current_challenge
+    return jsonify(PROBLEMS_DATA[current_challenge]['test_cases'])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
