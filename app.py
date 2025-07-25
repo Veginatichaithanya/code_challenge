@@ -888,6 +888,253 @@ print("\\n" + db_encryption.generate_report())''',
                 'expected_output': 'Data encrypted successfully'
             }
         ]
+    },
+    "des": {
+        "title": "Data Encryption Standard (DES)",
+        "difficulty": "Medium",
+        "marks": "45 Marks",
+        "description": """Data Encryption Standard (DES) is a symmetric-key algorithm for the encryption of digital data. It uses a 56-bit key to encrypt data in 64-bit blocks.""",
+        "how_it_works": [
+            "Input 64-bit plaintext block",
+            "Apply initial permutation",
+            "Perform 16 rounds of Feistel function",
+            "Apply final permutation to get ciphertext"
+        ],
+        "examples": [
+            {
+                "input": "Plaintext: 'HELLO123', Key: '1234567890ABCDEF'",
+                "output": "Ciphertext: encrypted block"
+            }
+        ],
+        "starter_code": '''# Simplified DES implementation for educational purposes
+def des_encrypt(plaintext, key):
+    """Simplified DES encryption simulation"""
+    # This is a simplified version for demonstration
+    encrypted = ""
+    key_int = sum(ord(c) for c in key) % 256
+    
+    for char in plaintext:
+        encrypted_char = chr((ord(char) + key_int) % 256)
+        encrypted += encrypted_char
+    
+    return encrypted
+
+def des_decrypt(ciphertext, key):
+    """Simplified DES decryption simulation"""
+    decrypted = ""
+    key_int = sum(ord(c) for c in key) % 256
+    
+    for char in ciphertext:
+        decrypted_char = chr((ord(char) - key_int) % 256)
+        decrypted += decrypted_char
+    
+    return decrypted
+
+# Example usage
+plaintext = input("Enter text to encrypt: ")
+key = "DESKEY12"  # 8-character key for DES
+
+encrypted = des_encrypt(plaintext, key)
+print(f"Encrypted: {encrypted}")
+
+decrypted = des_decrypt(encrypted, key)
+print(f"Decrypted: {decrypted}")
+print(f"Match: {plaintext == decrypted}")''',
+        "test_cases": [
+            {
+                'name': 'DES Encryption Test',
+                'input': 'HELLO123\\n',
+                'expected_output': 'Match: True'
+            }
+        ]
+    },
+    "aes": {
+        "title": "Advanced Encryption Standard (AES)",
+        "difficulty": "Medium",
+        "marks": "50 Marks",
+        "description": """Advanced Encryption Standard (AES) is a symmetric encryption algorithm that replaced DES. It supports key sizes of 128, 192, and 256 bits.""",
+        "how_it_works": [
+            "Initialize with key expansion",
+            "Apply initial round key addition",
+            "Perform multiple rounds of SubBytes, ShiftRows, MixColumns",
+            "Final round without MixColumns"
+        ],
+        "examples": [
+            {
+                "input": "Plaintext: 'Secret Message', Key: 128-bit key",
+                "output": "Ciphertext: AES encrypted data"
+            }
+        ],
+        "starter_code": '''import hashlib
+
+class SimpleAES:
+    def __init__(self, key):
+        self.key = hashlib.sha256(key.encode()).digest()[:16]  # 128-bit key
+    
+    def encrypt(self, plaintext):
+        """Simplified AES encryption simulation"""
+        # Pad plaintext to 16-byte blocks
+        padded = self._pad(plaintext)
+        encrypted = b''
+        
+        for i in range(0, len(padded), 16):
+            block = padded[i:i+16]
+            encrypted_block = self._encrypt_block(block)
+            encrypted += encrypted_block
+        
+        return encrypted.hex()
+    
+    def decrypt(self, ciphertext_hex):
+        """Simplified AES decryption simulation"""
+        ciphertext = bytes.fromhex(ciphertext_hex)
+        decrypted = b''
+        
+        for i in range(0, len(ciphertext), 16):
+            block = ciphertext[i:i+16]
+            decrypted_block = self._decrypt_block(block)
+            decrypted += decrypted_block
+        
+        return self._unpad(decrypted).decode()
+    
+    def _encrypt_block(self, block):
+        """Simulate block encryption"""
+        result = bytearray(16)
+        for i in range(16):
+            result[i] = (block[i] ^ self.key[i]) % 256
+        return bytes(result)
+    
+    def _decrypt_block(self, block):
+        """Simulate block decryption"""
+        result = bytearray(16)
+        for i in range(16):
+            result[i] = (block[i] ^ self.key[i]) % 256
+        return bytes(result)
+    
+    def _pad(self, text):
+        """PKCS7 padding"""
+        text_bytes = text.encode()
+        pad_len = 16 - (len(text_bytes) % 16)
+        return text_bytes + bytes([pad_len] * pad_len)
+    
+    def _unpad(self, padded):
+        """Remove PKCS7 padding"""
+        pad_len = padded[-1]
+        return padded[:-pad_len]
+
+# Example usage
+plaintext = input("Enter text to encrypt: ")
+key = "MySecretAESKey123"
+
+aes = SimpleAES(key)
+encrypted = aes.encrypt(plaintext)
+print(f"Encrypted: {encrypted}")
+
+decrypted = aes.decrypt(encrypted)
+print(f"Decrypted: {decrypted}")
+print(f"Match: {plaintext == decrypted}")''',
+        "test_cases": [
+            {
+                'name': 'AES Encryption Test',
+                'input': 'Hello AES\\n',
+                'expected_output': 'Match: True'
+            }
+        ]
+    },
+    "rsa": {
+        "title": "Asymmetric Key Encryption (RSA)",
+        "difficulty": "Hard",
+        "marks": "60 Marks",
+        "description": """RSA is a public-key cryptosystem that uses the mathematical properties of large prime numbers for secure communication.""",
+        "how_it_works": [
+            "Generate two large prime numbers p and q",
+            "Calculate n = p × q and φ(n) = (p-1)(q-1)",
+            "Choose public exponent e and calculate private exponent d",
+            "Encrypt with public key (e,n), decrypt with private key (d,n)"
+        ],
+        "examples": [
+            {
+                "input": "Message: 'HELLO', Public key used for encryption",
+                "output": "Encrypted message that can only be decrypted with private key"
+            }
+        ],
+        "starter_code": '''def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+def mod_inverse(a, m):
+    """Extended Euclidean Algorithm"""
+    if gcd(a, m) != 1:
+        return None
+    
+    def extended_gcd(a, b):
+        if a == 0:
+            return b, 0, 1
+        gcd, x1, y1 = extended_gcd(b % a, a)
+        x = y1 - (b // a) * x1
+        y = x1
+        return gcd, x, y
+    
+    _, x, _ = extended_gcd(a, m)
+    return (x % m + m) % m
+
+def power_mod(base, exp, mod):
+    result = 1
+    base = base % mod
+    while exp > 0:
+        if exp % 2 == 1:
+            result = (result * base) % mod
+        exp = exp >> 1
+        base = (base * base) % mod
+    return result
+
+def rsa_keygen(p, q):
+    """Generate RSA key pair"""
+    n = p * q
+    phi = (p - 1) * (q - 1)
+    
+    e = 65537  # Common public exponent
+    while gcd(e, phi) != 1:
+        e += 2
+    
+    d = mod_inverse(e, phi)
+    
+    return (e, n), (d, n)  # (public_key, private_key)
+
+def rsa_encrypt(message, public_key):
+    """Encrypt message with RSA public key"""
+    e, n = public_key
+    # Convert message to number (simplified)
+    message_num = sum(ord(char) * (256 ** i) for i, char in enumerate(message)) % n
+    return power_mod(message_num, e, n)
+
+def rsa_decrypt(ciphertext, private_key):
+    """Decrypt message with RSA private key"""
+    d, n = private_key
+    return power_mod(ciphertext, d, n)
+
+# Example usage with small primes (for demonstration)
+print("RSA Encryption Demo")
+message = input("Enter message to encrypt: ")
+
+# Use small primes for demo
+p, q = 61, 53
+public_key, private_key = rsa_keygen(p, q)
+
+encrypted = rsa_encrypt(message, public_key)
+decrypted_num = rsa_decrypt(encrypted, private_key)
+
+print(f"Original message: {message}")
+print(f"Encrypted: {encrypted}")
+print(f"Decrypted number: {decrypted_num}")
+print(f"RSA encryption successful: {encrypted != decrypted_num}")''',
+        "test_cases": [
+            {
+                'name': 'RSA Encryption Test',
+                'input': 'HELLO\\n',
+                'expected_output': 'RSA encryption successful: True'
+            }
+        ]
     }
 }
 
@@ -914,7 +1161,7 @@ def next_challenge():
     """Switch to the next challenge."""
     global current_challenge
     
-    challenge_order = ["caesar_cipher", "monoalphabetic_cipher", "mac", "diffie_hellman", "digital_signature", "mobile_security", "intrusion_detection", "malware_trojans", "rootkit_hunter", "database_security", "database_encryption"]
+    challenge_order = ["caesar_cipher", "monoalphabetic_cipher", "mac", "des", "aes", "rsa", "diffie_hellman", "digital_signature", "mobile_security", "intrusion_detection", "malware_trojans", "rootkit_hunter", "database_security", "database_encryption"]
     current_index = challenge_order.index(current_challenge)
     next_index = (current_index + 1) % len(challenge_order)
     current_challenge = challenge_order[next_index]

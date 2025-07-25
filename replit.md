@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a web-based Python coding challenge platform featuring multiple cybersecurity problems. The application provides an interactive coding environment where users can write, test, and validate their Python solutions across 11 different challenges including Caesar Cipher, Monoalphabetic Cipher, MAC, Diffie-Hellman Key Exchange, Digital Signatures, Mobile Security, Intrusion Detection Systems, Malware Analysis (Trojans and Rootkits), and Database Security. The platform features a dashboard-style interface with challenge cards and a professional code editor.
+This is a web-based Python coding challenge platform featuring multiple cybersecurity problems. The application provides an interactive coding environment where users can write, test, and validate their Python solutions across 14 different challenges including Caesar Cipher, Monoalphabetic Cipher, MAC, DES, AES, RSA, Diffie-Hellman Key Exchange, Digital Signatures, Mobile Security, Intrusion Detection Systems, Malware Analysis (Trojans and Rootkits), and Database Security. The platform features a dashboard-style interface with challenge cards arranged in the exact order specified by the user's requirements.
 
 ## User Preferences
 
@@ -36,11 +36,11 @@ Preferred communication style: Simple, everyday language.
 ## Key Components
 
 ### 1. Multi-Challenge System
-- **Dashboard Interface**: Challenge cards grid with difficulty-based color coding
-- **11 Cybersecurity Challenges**: Caesar Cipher, Monoalphabetic Cipher, MAC, Diffie-Hellman, Digital Signatures, Mobile Security, Intrusion Detection, Trojan Analysis, Rootkit Detection, Database Security, Database Encryption
+- **Dashboard Interface**: Challenge cards grid with difficulty-based color coding arranged in user-specified order
+- **14 Cybersecurity Challenges**: Caesar Cipher, Monoalphabetic Cipher, MAC, DES, AES, RSA, Diffie-Hellman, Digital Signatures, Mobile Security, Intrusion Detection, Trojan Analysis, Rootkit Detection, Database Security, Database Encryption
 - **Problem Data Structure**: Centralized problem definitions with individual test cases
 - **Navigation**: Dashboard → Individual Challenge → Back to Dashboard flow
-- **Challenge Progression**: Next button cycles through all 11 challenges
+- **Challenge Progression**: Next button cycles through all 14 challenges in specified sequence
 
 ### 2. Professional Code Editor Interface
 - **Enhanced UI**: Larger, more professional design with gradient backgrounds
