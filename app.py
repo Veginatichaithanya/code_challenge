@@ -5,7 +5,7 @@ import tempfile
 import sys
 import traceback
 import json
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -209,10 +209,19 @@ print("Tampered message MAC is valid:", is_valid)''',
 current_challenge = "caesar_cipher"
 
 @app.route('/')
-def index():
-    """Render the main page with the code editor."""
+def dashboard():
+    """Render the dashboard with all challenges."""
+    return render_template('dashboard.html')
+
+@app.route('/challenge/<challenge_id>')
+def challenge(challenge_id):
+    """Render the challenge page with the code editor."""
     global current_challenge
-    return render_template('index.html', problem=PROBLEMS_DATA[current_challenge])
+    if challenge_id in PROBLEMS_DATA:
+        current_challenge = challenge_id
+        return render_template('index.html', problem=PROBLEMS_DATA[challenge_id])
+    else:
+        return redirect('/')
 
 @app.route('/next_challenge')
 def next_challenge():

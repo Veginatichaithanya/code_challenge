@@ -14,7 +14,7 @@ html, body {
 /* Navigation */
 .navbar {
     z-index: 1000;
-    min-height: 80px;
+    min-height: 60px;
 }
 
 .bg-gradient-primary {
@@ -22,20 +22,21 @@ html, body {
 }
 
 .challenge-info .navbar-brand {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    margin-right: 0;
 }
 
 .challenge-meta .badge {
-    font-size: 0.9rem;
-    padding: 8px 16px;
-    border-radius: 20px;
+    font-size: 0.8rem;
+    padding: 4px 12px;
+    border-radius: 15px;
 }
 
 /* Main Layout */
 .row {
-    height: calc(100vh - 80px); /* Subtract navbar height */
+    height: calc(100vh - 60px); /* Subtract navbar height */
 }
 
 /* Problem Panel */

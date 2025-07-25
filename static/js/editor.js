@@ -274,20 +274,8 @@ function loadNextChallenge() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                updateProblemUI(data.problem);
-                codeEditor.setValue(data.problem.starter_code);
-                
-                // Clear previous outputs
-                document.getElementById('executionOutput').innerHTML = '<div class="text-muted fs-5"><i class="fas fa-play-circle me-2"></i>Run your code to see output here...</div>';
-                document.getElementById('errorOutput').innerHTML = '<div class="text-muted fs-5"><i class="fas fa-check-circle me-2"></i>No errors to display</div>';
-                
-                // Switch to description tab
-                document.getElementById('description-tab').click();
-                
-                // Reload test cases
-                loadTestCases();
-                
-                showMessage(`Switched to ${data.problem.title}!`, 'success');
+                // Redirect to the new challenge page
+                window.location.href = `/challenge/${data.challenge}`;
             }
         })
         .catch(error => {
@@ -296,46 +284,7 @@ function loadNextChallenge() {
         });
 }
 
-// Update problem UI with new data
-function updateProblemUI(problem) {
-    // Update header
-    document.getElementById('challengeTitle').textContent = problem.title;
-    document.getElementById('challengeDifficulty').textContent = problem.difficulty;
-    document.getElementById('challengeMarks').textContent = problem.marks;
-    
-    // Update problem content
-    document.getElementById('problemTitle').textContent = problem.title;
-    document.getElementById('problemDescription').textContent = problem.description;
-    document.getElementById('solutionTitle').textContent = `Solution for ${problem.title} - ${problem.marks}`;
-    document.getElementById('solutionCode').textContent = problem.starter_code;
-    
-    // Update how it works list
-    const howItWorksList = document.getElementById('howItWorksList');
-    howItWorksList.innerHTML = '';
-    problem.how_it_works.forEach(step => {
-        const li = document.createElement('li');
-        li.className = 'mb-2';
-        li.innerHTML = `<i class="fas fa-check-circle text-success me-2"></i>${step}`;
-        howItWorksList.appendChild(li);
-    });
-    
-    // Update examples
-    const examplesList = document.getElementById('examplesList');
-    examplesList.innerHTML = '';
-    problem.examples.forEach(example => {
-        const div = document.createElement('div');
-        div.className = 'example-card mb-3';
-        div.innerHTML = `
-            <div class="input-example">
-                <strong class="text-primary">Input:</strong> ${escapeHtml(example.input)}
-            </div>
-            <div class="output-example">
-                <strong class="text-success">Output:</strong> ${escapeHtml(example.output)}
-            </div>
-        `;
-        examplesList.appendChild(div);
-    });
-}
+
 
 // Copy code to editor
 function copyCodeToEditor() {
