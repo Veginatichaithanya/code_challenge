@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a web-based Python coding challenge platform featuring multiple cryptography problems. The application provides an interactive coding environment where users can write, test, and validate their Python solutions across different challenges including Caesar Cipher, Basic Monoalphabetic Cipher, and Message Authentication Code (MAC). The platform features a modern split-screen interface with problem descriptions on the left and a professional code editor on the right.
+This is a web-based Python coding challenge platform featuring multiple cybersecurity problems. The application provides an interactive coding environment where users can write, test, and validate their Python solutions across 11 different challenges including Caesar Cipher, Monoalphabetic Cipher, MAC, Diffie-Hellman Key Exchange, Digital Signatures, Mobile Security, Intrusion Detection Systems, Malware Analysis (Trojans and Rootkits), and Database Security. The platform features a dashboard-style interface with challenge cards and a professional code editor.
 
 ## User Preferences
 
@@ -36,10 +36,11 @@ Preferred communication style: Simple, everyday language.
 ## Key Components
 
 ### 1. Multi-Challenge System
-- **Challenge Rotation**: Three cryptography challenges with next button functionality
+- **Dashboard Interface**: Challenge cards grid with difficulty-based color coding
+- **11 Cybersecurity Challenges**: Caesar Cipher, Monoalphabetic Cipher, MAC, Diffie-Hellman, Digital Signatures, Mobile Security, Intrusion Detection, Trojan Analysis, Rootkit Detection, Database Security, Database Encryption
 - **Problem Data Structure**: Centralized problem definitions with individual test cases
-- **Dynamic Content**: Real-time challenge switching without page reload
-- **Challenge Progression**: Caesar Cipher → Monoalphabetic Cipher → MAC → Loop back
+- **Navigation**: Dashboard → Individual Challenge → Back to Dashboard flow
+- **Challenge Progression**: Next button cycles through all 11 challenges
 
 ### 2. Professional Code Editor Interface
 - **Enhanced UI**: Larger, more professional design with gradient backgrounds
