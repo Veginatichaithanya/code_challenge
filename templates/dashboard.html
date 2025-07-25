@@ -3,440 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cybersecurity Challenges - Python Code Editor</title>
-    
-    <!-- Bootstrap CSS -->
+    <title>Simple Coding Challenges</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom CSS -->
     <style>
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem 0;
-            margin-bottom: 3rem;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 0;
-        }
-        
-        .challenge-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            padding: 0 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
         .challenge-card {
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border-top: 5px solid;
-            position: relative;
-            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
         }
         
         .challenge-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
         
-        .challenge-card.easy {
-            border-top-color: #28a745;
-        }
-        
-        .challenge-card.medium {
-            border-top-color: #ffc107;
-        }
-        
-        .challenge-card.hard {
-            border-top-color: #dc3545;
-        }
-        
-        .challenge-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #2c3e50;
-        }
-        
-        .challenge-meta {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .badge-difficulty {
-            padding: 0.5rem 1rem;
+        .difficulty-badge {
+            font-size: 0.75rem;
+            padding: 4px 8px;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
         }
         
-        .badge-easy {
+        .difficulty-easy {
             background-color: #d4edda;
             color: #155724;
         }
         
-        .badge-medium {
+        .difficulty-medium {
             background-color: #fff3cd;
             color: #856404;
         }
         
-        .badge-hard {
+        .difficulty-hard {
             background-color: #f8d7da;
             color: #721c24;
         }
         
-        .badge-marks {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            padding: 0.5rem 1rem;
+        .marks-badge {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            font-size: 0.75rem;
+            padding: 4px 8px;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        
-        .challenge-description {
-            color: #6c757d;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        
-        .start-btn {
-            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 1rem;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-        
-        .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
-            color: white;
-        }
-        
-        .challenge-icon {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            width: 60px;
-            height: 60px;
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container text-center">
-            <h1>Cybersecurity Challenges</h1>
-            <p class="lead mb-0">Master cryptography through hands-on Python programming</p>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h1 class="text-white mb-3">Simple Coding Challenges</h1>
+                <p class="text-white-50">Practice your programming skills with these simple challenges</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for challenge_id, challenge in challenges.items() %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card challenge-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h5 class="card-title mb-0">{{ challenge.title }}</h5>
+                            <div class="d-flex flex-column gap-1">
+                                <span class="difficulty-badge difficulty-{{ challenge.difficulty.lower() }}">
+                                    {{ challenge.difficulty }}
+                                </span>
+                                <span class="marks-badge">{{ challenge.marks }}</span>
+                            </div>
+                        </div>
+                        
+                        <p class="card-text text-muted">{{ challenge.description }}</p>
+                        
+                        <div class="mt-auto">
+                            <a href="/challenge/{{ challenge_id }}" class="btn btn-primary w-100">
+                                Start Challenge
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 
-    <div class="challenge-grid">
-        <!-- Caesar Cipher -->
-        <div class="challenge-card easy">
-            <div class="challenge-icon">
-                <i class="fas fa-key"></i>
-            </div>
-            <h3 class="challenge-title">Caesar Cipher</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-easy">Easy</span>
-                <span class="badge-marks">25 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement a basic character shifting encryption technique
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('caesar_cipher')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Basic Monoalphabetic Cipher -->
-        <div class="challenge-card easy">
-            <div class="challenge-icon">
-                <i class="fas fa-exchange-alt"></i>
-            </div>
-            <h3 class="challenge-title">Basic Monoalphabetic Cipher</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-easy">Easy</span>
-                <span class="badge-marks">30 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement a static mapping substitution technique for encryption
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('monoalphabetic_cipher')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Message Authentication Code -->
-        <div class="challenge-card medium">
-            <div class="challenge-icon">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h3 class="challenge-title">Message Authentication Code (MAC)</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-medium">Medium</span>
-                <span class="badge-marks">40 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Ensure message integrity using authentication tags
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('mac')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Data Encryption Standard (DES) -->
-        <div class="challenge-card medium">
-            <div class="challenge-icon">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h3 class="challenge-title">Data Encryption Standard (DES)</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-medium">Medium</span>
-                <span class="badge-marks">45 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement the classic symmetric block cipher encryption
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('des')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Advanced Encryption Standard (AES) -->
-        <div class="challenge-card medium">
-            <div class="challenge-icon">
-                <i class="fas fa-lock"></i>
-            </div>
-            <h3 class="challenge-title">Advanced Encryption Standard (AES)</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-medium">Medium</span>
-                <span class="badge-marks">50 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement the modern symmetric encryption standard
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('aes')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Asymmetric Key Encryption (RSA) -->
-        <div class="challenge-card hard">
-            <div class="challenge-icon">
-                <i class="fas fa-key"></i>
-            </div>
-            <h3 class="challenge-title">Asymmetric Key Encryption (RSA)</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-hard">Hard</span>
-                <span class="badge-marks">60 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement public-private key encryption using RSA
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('rsa')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Diffie-Hellman Key Exchange -->
-        <div class="challenge-card hard">
-            <div class="challenge-icon">
-                <i class="fas fa-handshake"></i>
-            </div>
-            <h3 class="challenge-title">Secure Key Exchange (Diffie-Hellman)</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-hard">Hard</span>
-                <span class="badge-marks">55 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement a secure method for exchanging cryptographic keys
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('diffie_hellman')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Digital Signature -->
-        <div class="challenge-card hard">
-            <div class="challenge-icon">
-                <i class="fas fa-signature"></i>
-            </div>
-            <h3 class="challenge-title">Digital Signature Generation and Verification</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-hard">Hard</span>
-                <span class="badge-marks">65 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement cryptographic authentication of digital messages
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('digital_signature')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Mobile Security -->
-        <div class="challenge-card medium">
-            <div class="challenge-icon">
-                <i class="fas fa-mobile-alt"></i>
-            </div>
-            <h3 class="challenge-title">Mobile Security Implementation</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-medium">Medium</span>
-                <span class="badge-marks">50 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement essential mobile app security features
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('mobile_security')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Intrusion Detection System -->
-        <div class="challenge-card hard">
-            <div class="challenge-icon">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h3 class="challenge-title">Intrusion Detection System with Snort</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-hard">Hard</span>
-                <span class="badge-marks">70 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement a simplified IDS using Snort-like rules
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('intrusion_detection')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Malware - Building Trojans -->
-        <div class="challenge-card hard">
-            <div class="challenge-icon">
-                <i class="fas fa-bug"></i>
-            </div>
-            <h3 class="challenge-title">Defeating Malware – Building Trojans</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-hard">Hard</span>
-                <span class="badge-marks">75 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement and analyze Trojan behavior in a safe simulation
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('malware_trojans')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Rootkit Hunter -->
-        <div class="challenge-card hard">
-            <div class="challenge-icon">
-                <i class="fas fa-search"></i>
-            </div>
-            <h3 class="challenge-title">Defeating Malware – Rootkit Hunter</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-hard">Hard</span>
-                <span class="badge-marks">80 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement tools to detect and analyze system-level rootkits
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('rootkit_hunter')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Database Security -->
-        <div class="challenge-card medium">
-            <div class="challenge-icon">
-                <i class="fas fa-database"></i>
-            </div>
-            <h3 class="challenge-title">Database Security Implementation</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-medium">Medium</span>
-                <span class="badge-marks">55 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Implement access control, role-based permissions, and authentication for databases
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('database_security')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-
-        <!-- Database Encryption -->
-        <div class="challenge-card hard">
-            <div class="challenge-icon">
-                <i class="fas fa-lock"></i>
-            </div>
-            <h3 class="challenge-title">Database Encryption & Integrity Control</h3>
-            <div class="challenge-meta">
-                <span class="badge-difficulty badge-hard">Hard</span>
-                <span class="badge-marks">65 Marks</span>
-            </div>
-            <p class="challenge-description">
-                Secure stored data using hashing and encryption techniques
-            </p>
-            <button class="btn start-btn" onclick="startChallenge('database_encryption')">
-                <i class="fas fa-play me-2"></i>
-                Start Challenge
-            </button>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        function startChallenge(challengeId) {
-            // Redirect to the challenge page
-            window.location.href = `/challenge/${challengeId}`;
-        }
-    </script>
 </body>
 </html>
