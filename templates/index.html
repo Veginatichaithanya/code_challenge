@@ -20,42 +20,43 @@
 </head>
 <body>
     <div class="container-fluid h-100">
-        <!-- Header -->
-        <nav class="navbar navbar-light bg-white border-bottom py-3">
-            <div class="container-fluid">
-                <div class="d-flex align-items-center">
-                    <button class="btn btn-outline-secondary me-3" onclick="window.location.href='/'">
-                        <i class="fas fa-arrow-left me-2"></i>
-                        Back to Dashboard
-                    </button>
-                    <div class="challenge-info">
-                        <h2 class="navbar-brand mb-0 h3 fw-bold text-dark" id="challengeTitle">
-                            {{ problem.title }}
-                        </h2>
-                        <div class="challenge-meta">
-                            <span class="badge bg-success me-2" id="challengeDifficulty">{{ problem.difficulty }}</span>
-                            <span class="badge bg-info" id="challengeMarks">{{ problem.marks }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-primary px-4" id="previousChallenge">
-                        <i class="fas fa-arrow-left me-2"></i>
-                        Previous
-                    </button>
-                    <button class="btn btn-primary px-4" id="nextChallenge">
-                        Next
-                        <i class="fas fa-arrow-right ms-2"></i>
-                    </button>
-                </div>
-            </div>
-        </nav>
 
         <!-- Main Content -->
         <div class="row h-100 g-0">
             <!-- Left Panel - Problem Description -->
             <div class="col-md-6 problem-panel">
                 <div class="p-5">
+                    <!-- Challenge Header -->
+                    <div class="challenge-header mb-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h2 class="h3 fw-bold text-dark mb-2" id="challengeTitle">{{ problem.title }}</h2>
+                                <div class="challenge-meta">
+                                    <span class="badge bg-success me-2" id="challengeDifficulty">{{ problem.difficulty }}</span>
+                                    <span class="badge bg-info" id="challengeMarks">{{ problem.marks }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Navigation Buttons -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-outline-secondary" onclick="window.location.href='/'">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to Dashboard
+                            </button>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-primary" id="previousChallenge">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Previous
+                                </button>
+                                <button class="btn btn-primary" id="nextChallenge">
+                                    Next
+                                    <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Tabs -->
                     <ul class="nav nav-tabs nav-tabs-custom" id="problemTabs" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -77,7 +78,6 @@
                         <!-- Description Tab -->
                         <div class="tab-pane fade show active" id="description" role="tabpanel">
                             <div class="problem-content">
-                                <h3 class="fw-bold mb-4" id="problemTitle">{{ problem.title }}</h3>
                                 <div class="problem-description mb-4">
                                     <p class="lead" id="problemDescription">{{ problem.description }}</p>
                                 </div>
