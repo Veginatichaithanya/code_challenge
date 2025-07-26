@@ -5,32 +5,14 @@ import tempfile
 import sys
 import traceback
 import json
-from flask import Flask, render_template, request, jsonify, redirect, flash
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
-from werkzeug.middleware.proxy_fix import ProxyFix
+from flask import Flask, render_template, request, jsonify, redirect
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
-class Base(DeclarativeBase):
-    pass
-
 # Create Flask app
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key-change-in-production")
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
-
-# Database configuration
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///cybersecurity_platform.db")
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_recycle": 300,
-    "pool_pre_ping": True,
-}
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# Initialize database
-db = SQLAlchemy(app, model_class=Base)
 
 # Problem data for different challenges
 PROBLEMS_DATA = {
@@ -1384,22 +1366,6 @@ def run_test_cases():
             'success': False,
             'error': f'Test execution error: {str(e)}'
         })
-
-# Import models and auth after app creation
-from auth import auth_bp, init_login_manager
-from progress_service import ProgressService
-
-# Initialize authentication
-init_login_manager(app)
-
-# Register blueprints
-app.register_blueprint(auth_bp)
-
-# Create database tables
-with app.app_context():
-    import models  # Import models to ensure they're registered
-    db.create_all()
-    logging.info("Database tables created")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
