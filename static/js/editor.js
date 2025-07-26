@@ -79,7 +79,7 @@ function setupEventListeners() {
     
     // Execute with input button in modal
     document.getElementById('executeWithInput').addEventListener('click', function() {
-        const input = document.getElementById('testInput').value;
+        const input = document.getElementById('testInput').value.replace(/\\n/g, '\n');
         executeCode(input);
         bootstrap.Modal.getInstance(document.getElementById('testInputModal')).hide();
     });
@@ -196,7 +196,7 @@ function executeAllTestCases() {
             },
             body: JSON.stringify({
                 code: codeEditor.getValue(),
-                input: testCase.input
+                input: testCase.input.replace(/\\n/g, '\n')
             })
         })
         .then(response => response.json())

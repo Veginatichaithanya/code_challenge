@@ -1178,7 +1178,7 @@ def execute_code():
     try:
         request_data = request.get_json() or {}
         user_code = request_data.get('code', '')
-        test_input = request_data.get('input', '')
+        test_input = request_data.get('input', '').replace('\\n', '\n')
         
         if not user_code.strip():
             return jsonify({
