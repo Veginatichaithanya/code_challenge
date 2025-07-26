@@ -1169,7 +1169,27 @@ def next_challenge():
     return jsonify({
         'success': True,
         'challenge': current_challenge,
-        'problem': PROBLEMS_DATA[current_challenge]
+        'problem': PROBLEMS_DATA[current_challenge],
+        'current_index': next_index + 1,
+        'total_challenges': len(challenge_order)
+    })
+
+@app.route('/previous_challenge')
+def previous_challenge():
+    """Switch to the previous challenge."""
+    global current_challenge
+    
+    challenge_order = ["caesar_cipher", "monoalphabetic_cipher", "mac", "des", "aes", "rsa", "diffie_hellman", "digital_signature", "mobile_security", "intrusion_detection", "malware_trojans", "rootkit_hunter", "database_security", "database_encryption"]
+    current_index = challenge_order.index(current_challenge)
+    prev_index = (current_index - 1) % len(challenge_order)
+    current_challenge = challenge_order[prev_index]
+    
+    return jsonify({
+        'success': True,
+        'challenge': current_challenge,
+        'problem': PROBLEMS_DATA[current_challenge],
+        'current_index': prev_index + 1,
+        'total_challenges': len(challenge_order)
     })
 
 @app.route('/execute', methods=['POST'])

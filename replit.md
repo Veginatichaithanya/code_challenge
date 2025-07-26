@@ -40,7 +40,8 @@ Preferred communication style: Simple, everyday language.
 - **14 Cybersecurity Challenges**: Caesar Cipher, Monoalphabetic Cipher, MAC, DES, AES, RSA, Diffie-Hellman, Digital Signatures, Mobile Security, Intrusion Detection, Trojan Analysis, Rootkit Detection, Database Security, Database Encryption
 - **Problem Data Structure**: Centralized problem definitions with individual test cases
 - **Navigation**: Dashboard → Individual Challenge → Back to Dashboard flow
-- **Challenge Progression**: Next button cycles through all 14 challenges in specified sequence
+- **Challenge Progression**: Next/Previous buttons cycle through all 14 challenges in exact user-specified sequence
+- **Exact Challenge Order**: 1) Caesar Cipher, 2) Basic Monoalphabetic Cipher, 3) MAC, 4) DES, 5) AES, 6) RSA, 7) Diffie-Hellman, 8) Digital Signatures, 9) Mobile Security, 10) Intrusion Detection, 11) Trojans, 12) Rootkit Hunter, 13) Database Security, 14) Database Encryption
 
 ### 2. Professional Code Editor Interface
 - **Enhanced UI**: Larger, more professional design with gradient backgrounds

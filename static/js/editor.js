@@ -93,6 +93,11 @@ function setupEventListeners() {
     document.getElementById('nextChallenge').addEventListener('click', function() {
         loadNextChallenge();
     });
+    
+    // Previous Challenge button
+    document.getElementById('previousChallenge').addEventListener('click', function() {
+        loadPreviousChallenge();
+    });
 }
 
 // Show test input modal
@@ -291,7 +296,8 @@ function loadNextChallenge() {
                 // Update the problem data and reload test cases
                 updateChallenge(data.problem);
                 loadTestCases();
-                showMessage('Challenge updated successfully!', 'success');
+                updateNavigationInfo(data.current_index, data.total_challenges);
+                showMessage(`Next Challenge: ${data.problem.title}`, 'success');
             }
         })
         .catch(error => {
@@ -300,37 +306,97 @@ function loadNextChallenge() {
         });
 }
 
+// Load previous challenge
+function loadPreviousChallenge() {
+    fetch('/previous_challenge')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the problem data and reload test cases
+                updateChallenge(data.problem);
+                loadTestCases();
+                updateNavigationInfo(data.current_index, data.total_challenges);
+                showMessage(`Previous Challenge: ${data.problem.title}`, 'success');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading previous challenge:', error);
+            showMessage('Error loading previous challenge', 'error');
+        });
+}
+
 // Update challenge content
 function updateChallenge(problemData) {
-    // Update the problem title
-    const titleElement = document.querySelector('.problem-title');
-    if (titleElement && problemData.title) {
-        titleElement.textContent = problemData.title;
+    // Update the main title in navbar
+    const navbarTitle = document.getElementById('challengeTitle');
+    if (navbarTitle && problemData.title) {
+        navbarTitle.textContent = problemData.title;
     }
     
     // Update difficulty badge
-    const difficultyElement = document.querySelector('.difficulty-badge');
+    const difficultyElement = document.getElementById('challengeDifficulty');
     if (difficultyElement && problemData.difficulty) {
         difficultyElement.textContent = problemData.difficulty;
-        difficultyElement.className = `badge difficulty-badge ${problemData.difficulty.toLowerCase()}`;
+        // Update difficulty color based on level
+        difficultyElement.className = `badge me-2 ${getDifficultyBadgeClass(problemData.difficulty)}`;
     }
     
-    // Update marks
-    const marksElement = document.querySelector('.marks-badge');
+    // Update marks badge
+    const marksElement = document.getElementById('challengeMarks');
     if (marksElement && problemData.marks) {
         marksElement.textContent = problemData.marks;
     }
     
-    // Update description
+    // Update page title
+    document.title = `${problemData.title} - Python Code Editor`;
+    
+    // Update problem description
     const descElement = document.querySelector('.problem-description');
     if (descElement && problemData.description) {
         descElement.textContent = problemData.description;
+    }
+    
+    // Update how it works section
+    const howItWorksElement = document.querySelector('.how-it-works-list');
+    if (howItWorksElement && problemData.how_it_works) {
+        howItWorksElement.innerHTML = problemData.how_it_works.map(step => `<li>${step}</li>`).join('');
+    }
+    
+    // Update examples section
+    const examplesElement = document.querySelector('.examples-section');
+    if (examplesElement && problemData.examples) {
+        let examplesHtml = '';
+        problemData.examples.forEach(example => {
+            examplesHtml += `
+                <div class="example-item">
+                    <strong>Input:</strong> ${example.input}<br>
+                    <strong>Output:</strong> ${example.output}
+                </div>
+            `;
+        });
+        examplesElement.innerHTML = examplesHtml;
     }
     
     // Update starter code
     if (problemData.starter_code && codeEditor) {
         codeEditor.setValue(problemData.starter_code);
     }
+}
+
+// Get appropriate badge class for difficulty
+function getDifficultyBadgeClass(difficulty) {
+    switch(difficulty.toLowerCase()) {
+        case 'easy': return 'bg-success';
+        case 'medium': return 'bg-warning';
+        case 'hard': return 'bg-danger';
+        default: return 'bg-secondary';
+    }
+}
+
+// Update navigation info
+function updateNavigationInfo(currentIndex, totalChallenges) {
+    // You can add progress indicator here if needed
+    console.log(`Challenge ${currentIndex} of ${totalChallenges}`);
 }
 
 
