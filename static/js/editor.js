@@ -261,10 +261,16 @@ function loadTestCases() {
     fetch('/test_cases')
         .then(response => response.json())
         .then(data => {
-            currentTestCases = data;
+            if (data.success && Array.isArray(data.test_cases)) {
+                currentTestCases = data.test_cases;
+            } else {
+                currentTestCases = [];
+                console.warn('No test cases available or invalid format:', data);
+            }
         })
         .catch(error => {
             console.error('Error loading test cases:', error);
+            currentTestCases = [];
         });
 }
 
@@ -274,14 +280,49 @@ function loadNextChallenge() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Redirect to the new challenge page
-                window.location.href = `/challenge/${data.challenge}`;
+                // Update the problem data and reload test cases
+                updateChallenge(data.problem);
+                loadTestCases();
+                showMessage('Challenge updated successfully!', 'success');
             }
         })
         .catch(error => {
             console.error('Error loading next challenge:', error);
             showMessage('Error loading next challenge', 'error');
         });
+}
+
+// Update challenge content
+function updateChallenge(problemData) {
+    // Update the problem title
+    const titleElement = document.querySelector('.problem-title');
+    if (titleElement && problemData.title) {
+        titleElement.textContent = problemData.title;
+    }
+    
+    // Update difficulty badge
+    const difficultyElement = document.querySelector('.difficulty-badge');
+    if (difficultyElement && problemData.difficulty) {
+        difficultyElement.textContent = problemData.difficulty;
+        difficultyElement.className = `badge difficulty-badge ${problemData.difficulty.toLowerCase()}`;
+    }
+    
+    // Update marks
+    const marksElement = document.querySelector('.marks-badge');
+    if (marksElement && problemData.marks) {
+        marksElement.textContent = problemData.marks;
+    }
+    
+    // Update description
+    const descElement = document.querySelector('.problem-description');
+    if (descElement && problemData.description) {
+        descElement.textContent = problemData.description;
+    }
+    
+    // Update starter code
+    if (problemData.starter_code && codeEditor) {
+        codeEditor.setValue(problemData.starter_code);
+    }
 }
 
 
