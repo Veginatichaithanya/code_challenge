@@ -1176,7 +1176,9 @@ def next_challenge():
 def execute_code():
     """Execute Python code safely and return results."""
     try:
-        user_code = request.json.get('code', '')
+        request_data = request.get_json() or {}
+        user_code = request_data.get('code', '')
+        test_input = request_data.get('input', '')
         
         if not user_code.strip():
             return jsonify({
@@ -1191,13 +1193,13 @@ def execute_code():
             tmp_file_path = tmp_file.name
         
         try:
-            # Execute the code with timeout
+            # Execute the code with timeout and provide test input
             result = subprocess.run(
                 [sys.executable, tmp_file_path],
                 capture_output=True,
                 text=True,
                 timeout=10,
-                input=''
+                input=test_input
             )
             
             if result.returncode == 0:
@@ -1256,6 +1258,91 @@ def get_test_cases():
             'test_cases': PROBLEMS_DATA[current_challenge].get('test_cases', [])
         })
     return jsonify({'success': False, 'test_cases': []})
+
+@app.route('/run_test_cases', methods=['POST'])
+def run_test_cases():
+    """Execute code against all test cases for the current challenge."""
+    try:
+        request_data = request.get_json() or {}
+        user_code = request_data.get('code', '')
+        global current_challenge
+        
+        if not user_code.strip():
+            return jsonify({
+                'success': False,
+                'error': 'No code provided'
+            })
+        
+        if current_challenge not in PROBLEMS_DATA:
+            return jsonify({
+                'success': False,
+                'error': 'No valid challenge selected'
+            })
+            
+        test_cases = PROBLEMS_DATA[current_challenge].get('test_cases', [])
+        results = []
+        
+        for i, test_case in enumerate(test_cases):
+            test_input = test_case.get('input', '').replace('\\n', '\n')
+            
+            # Create temporary file for this test
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as tmp_file:
+                tmp_file.write(user_code)
+                tmp_file_path = tmp_file.name
+            
+            try:
+                # Execute the code with test input
+                result = subprocess.run(
+                    [sys.executable, tmp_file_path],
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    input=test_input
+                )
+                
+                output = result.stdout.strip()
+                expected = test_case.get('expected_output', '').strip()
+                
+                # Check if output contains expected text
+                passed = expected.lower() in output.lower() if expected else result.returncode == 0
+                
+                results.append({
+                    'name': test_case.get('name', f'Test {i+1}'),
+                    'passed': passed,
+                    'output': output,
+                    'expected': expected,
+                    'error': result.stderr if result.returncode != 0 else None
+                })
+                
+            except subprocess.TimeoutExpired:
+                results.append({
+                    'name': test_case.get('name', f'Test {i+1}'),
+                    'passed': False,
+                    'output': '',
+                    'expected': test_case.get('expected_output', ''),
+                    'error': 'Test timed out'
+                })
+            finally:
+                try:
+                    os.unlink(tmp_file_path)
+                except:
+                    pass
+        
+        passed_count = sum(1 for r in results if r['passed'])
+        total_count = len(results)
+        
+        return jsonify({
+            'success': True,
+            'results': results,
+            'summary': f'{passed_count}/{total_count} tests passed'
+        })
+        
+    except Exception as e:
+        logging.error(f"Test execution error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': f'Test execution error: {str(e)}'
+        })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
