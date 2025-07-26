@@ -21,15 +21,15 @@
 <body>
     <div class="container-fluid h-100">
         <!-- Header -->
-        <nav class="navbar navbar-dark bg-gradient-primary py-2">
+        <nav class="navbar navbar-light bg-white border-bottom py-3">
             <div class="container-fluid">
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-outline-light me-3" onclick="window.location.href='/'">
+                    <button class="btn btn-outline-secondary me-3" onclick="window.location.href='/'">
                         <i class="fas fa-arrow-left me-2"></i>
                         Back to Dashboard
                     </button>
                     <div class="challenge-info">
-                        <h2 class="navbar-brand mb-0 h3 fw-bold" id="challengeTitle">
+                        <h2 class="navbar-brand mb-0 h3 fw-bold text-dark" id="challengeTitle">
                             {{ problem.title }}
                         </h2>
                         <div class="challenge-meta">
@@ -39,12 +39,12 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-outline-light px-4" id="previousChallenge">
+                    <button class="btn btn-outline-primary px-4" id="previousChallenge">
                         <i class="fas fa-arrow-left me-2"></i>
-                        Previous Challenge
+                        Previous
                     </button>
-                    <button class="btn btn-light px-4" id="nextChallenge">
-                        Next Challenge
+                    <button class="btn btn-primary px-4" id="nextChallenge">
+                        Next
                         <i class="fas fa-arrow-right ms-2"></i>
                     </button>
                 </div>
