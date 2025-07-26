@@ -185,47 +185,55 @@ function executeAllTestCases() {
     // Switch to output tab
     document.getElementById('output-tab').click();
     
-    let completedTests = 0;
-    const results = [];
-    
-    currentTestCases.forEach((testCase, index) => {
-        fetch('/execute', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                code: codeEditor.getValue(),
-                input: testCase.input.replace(/\\n/g, '\n')
-            })
+    // Use the dedicated test cases endpoint
+    fetch('/run_test_cases', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            code: codeEditor.getValue()
         })
-        .then(response => response.json())
-        .then(data => {
-            results[index] = {
-                testCase: testCase,
-                result: data
-            };
-            
-            completedTests++;
-            if (completedTests === currentTestCases.length) {
-                displayTestResults(results);
-            }
-        })
-        .catch(error => {
-            results[index] = {
-                testCase: testCase,
-                result: { success: false, error: `Network error: ${error.message}` }
-            };
-            
-            completedTests++;
-            if (completedTests === currentTestCases.length) {
-                displayTestResults(results);
-            }
-        });
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayServerTestResults(data.results, data.summary);
+        } else {
+            outputDiv.innerHTML = `<div class="output-error">Test execution failed: ${escapeHtml(data.error)}</div>`;
+        }
+    })
+    .catch(error => {
+        console.error('Error running test cases:', error);
+        outputDiv.innerHTML = `<div class="output-error">Network error: ${error.message}</div>`;
     });
 }
 
-// Display test results
+// Display test results from server endpoint
+function displayServerTestResults(results, summary) {
+    const outputDiv = document.getElementById('executionOutput');
+    let html = '<div class="test-results">';
+    
+    results.forEach((testResult, index) => {
+        const passed = testResult.passed;
+        
+        html += `
+            <div class="test-case-result ${passed ? 'success' : 'failure'}">
+                <div class="test-case-name">${testResult.name} ${passed ? '✓' : '✗'}</div>
+                <div class="test-case-details">
+                    <strong>Expected:</strong> ${escapeHtml(testResult.expected)}<br>
+                    <strong>Got:</strong> ${testResult.error ? `Error: ${escapeHtml(testResult.error)}` : escapeHtml(testResult.output)}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `</div><div class="mt-3"><strong>Results: ${summary}</strong></div>`;
+    
+    outputDiv.innerHTML = html;
+}
+
+// Display test results (legacy function for single test execution)
 function displayTestResults(results) {
     const outputDiv = document.getElementById('executionOutput');
     let html = '<div class="test-results">';
@@ -236,7 +244,7 @@ function displayTestResults(results) {
         const testCase = item.testCase;
         const result = item.result;
         
-        const isSuccess = result.success && result.output.includes(testCase.expected_output.split(': ')[1]);
+        const isSuccess = result.success && result.output.toLowerCase().includes(testCase.expected_output.toLowerCase());
         if (isSuccess) passedTests++;
         
         html += `

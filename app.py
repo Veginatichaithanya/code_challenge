@@ -1303,8 +1303,11 @@ def run_test_cases():
                 output = result.stdout.strip()
                 expected = test_case.get('expected_output', '').strip()
                 
-                # Check if output contains expected text
-                passed = expected.lower() in output.lower() if expected else result.returncode == 0
+                # Check if output contains expected text (more flexible matching)
+                if expected:
+                    passed = expected.lower() in output.lower()
+                else:
+                    passed = result.returncode == 0
                 
                 results.append({
                     'name': test_case.get('name', f'Test {i+1}'),
